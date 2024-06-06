@@ -22,4 +22,4 @@ jobs:
       
       - name: Complianc check(tflint)
         id: tflint
-        run: tflint -f compact --force 
+        run: tflint -f compact
