@@ -1,7 +1,8 @@
 name: Review code
 
 on:
-  push
+    pull_request:
+        branches: [ main ]
 
 jobs:
     review:
@@ -17,8 +18,8 @@ jobs:
         uses: terraform-linters/setup-tflint@v4
         with:
           tflint_version: v0.50.3
-          tflint_wrapper: true
+          tflint_wrapper: false
       
       - name: Complianc check(tflint)
         id: tflint
-        run: tflint -f compact --force 
+        run: tflint -f compact

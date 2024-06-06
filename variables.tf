@@ -35,3 +35,8 @@ variable "cloudinit" {
   type = any
   description = "(optional) describe your variable"
 }
+
+variable "creds" {
+  type = map(string)
+  description = "Credentials for admin and password"
+}

@@ -23,13 +23,20 @@ data "template_file" "cloud_init" {
   template = optional(var.cloudinit, file("${path.module}/cloud-init.yml"))
 }
 
+resource "random_string" "randompas" {
+  length           = 16
+  special          = true
+  override_special = "/@£$"
+}
+
+
 resource "azurerm_virtual_machine" "webserver" {
   name                  = local.prefex
   location              = var.rg.location
   resource_group_name   = var.rg.name
   network_interface_ids = [azurerm_network_interface.webserver.id]
   vm_size               = "Standard_DS1_v2"
-
+  tags = merge({ name = local.prefex },var.tags)
   storage_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
@@ -46,8 +53,8 @@ resource "azurerm_virtual_machine" "webserver" {
 
   os_profile {
     computer_name  = "hostname"
-    admin_username = "adminuser"
-    admin_password = "Password1234!"
+    admin_username = optional(var.creds["admin_username"],"azuser")
+    admin_password = optional(var.creds["admin_password"],random_string.randompas.result)
     custom_data    = base64encode(data.template_file.cloud_init.rendered)
   }
 
