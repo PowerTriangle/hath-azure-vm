@@ -54,7 +54,7 @@ resource "azurerm_virtual_machine" "webserver" {
   os_profile {
     computer_name  = "hostname"
     admin_username = optional(var.creds["admin_username"],"azuser")
-    admin_password = optional(var.creds["admin_password"],"${random_string.randompas.result}")
+    admin_password = optional(var.creds["admin_password"],random_string.randompas.result)
     custom_data    = base64encode(data.template_file.cloud_init.rendered)
   }
 
